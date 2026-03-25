@@ -140,6 +140,8 @@ public sealed class ZadaniaLinq
     /// </summary>
     public IEnumerable<string> Zadanie08_UnikalneMiastaStudentow()
     {
+        var x  = DaneUczelni.Studenci.OrderBy(s => s.Miasto).Select(s=>s.Miasto).Distinct();
+        return x;
         throw Niezaimplementowano(nameof(Zadanie08_UnikalneMiastaStudentow));
     }
 
@@ -155,6 +157,8 @@ public sealed class ZadaniaLinq
     /// </summary>
     public IEnumerable<string> Zadanie09_TrzyNajnowszeZapisy()
     {
+        var x = DaneUczelni.Zapisy.OrderByDescending(s=> s.DataZapisu).Select(s=>$"{s.DataZapisu}, {s.StudentId}, {s.PrzedmiotId}").Take(3);
+        return x;
         throw Niezaimplementowano(nameof(Zadanie09_TrzyNajnowszeZapisy));
     }
 
@@ -171,6 +175,8 @@ public sealed class ZadaniaLinq
     /// </summary>
     public IEnumerable<string> Zadanie10_DrugaStronaPrzedmiotow()
     {
+        var x = DaneUczelni.Przedmioty.OrderBy(s => s.Nazwa).Select(s => $"{s.Nazwa},{s.Kategoria}").Skip(2).Take(2);
+        return x;
         throw Niezaimplementowano(nameof(Zadanie10_DrugaStronaPrzedmiotow));
     }
 
@@ -186,6 +192,10 @@ public sealed class ZadaniaLinq
     /// </summary>
     public IEnumerable<string> Zadanie11_PolaczStudentowIZapisy()
     {
+        var x = DaneUczelni.Studenci.Join(
+            DaneUczelni.Zapisy,s => s.Id, z=> z.Id, (s,z) => new { s, z }).Select(v => $"{v.s.Imie}, {v.s.Nazwisko}, {v.z.DataZapisu}");
+        return x;
+        
         throw Niezaimplementowano(nameof(Zadanie11_PolaczStudentowIZapisy));
     }
 
@@ -202,6 +212,11 @@ public sealed class ZadaniaLinq
     /// </summary>
     public IEnumerable<string> Zadanie12_ParyStudentPrzedmiot()
     {
+        var x = DaneUczelni.Studenci.Join(
+            DaneUczelni.Zapisy,s => s.Id, z=> z.Id, (s,z) => new { s, z }).
+            Join(DaneUczelni.Przedmioty, sz => sz.z.PrzedmiotId,p=>p.Id,(sz,p)=>new{sz,p}).
+            Select(v=>$"{v.sz.s.Imie}, {v.sz.s.Nazwisko}, {v.p.Nazwa}");
+        return x;
         throw Niezaimplementowano(nameof(Zadanie12_ParyStudentPrzedmiot));
     }
 
