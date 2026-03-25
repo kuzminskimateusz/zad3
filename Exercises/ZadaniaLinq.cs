@@ -193,7 +193,7 @@ public sealed class ZadaniaLinq
     public IEnumerable<string> Zadanie11_PolaczStudentowIZapisy()
     {
         var x = DaneUczelni.Studenci.Join(
-            DaneUczelni.Zapisy,s => s.Id, z=> z.Id, (s,z) => new { s, z }).Select(v => $"{v.s.Imie}, {v.s.Nazwisko}, {v.z.DataZapisu}");
+            DaneUczelni.Zapisy,s => s.Id, z=> z.StudentId, (s,z) => new { s, z }).Select(v => $"{v.s.Imie}, {v.s.Nazwisko}, {v.z.DataZapisu}");
         return x;
         
         throw Niezaimplementowano(nameof(Zadanie11_PolaczStudentowIZapisy));
@@ -213,7 +213,7 @@ public sealed class ZadaniaLinq
     public IEnumerable<string> Zadanie12_ParyStudentPrzedmiot()
     {
         var x = DaneUczelni.Studenci.Join(
-            DaneUczelni.Zapisy,s => s.Id, z=> z.Id, (s,z) => new { s, z }).
+            DaneUczelni.Zapisy,s => s.Id, z=> z.StudentId, (s,z) => new { s, z }).
             Join(DaneUczelni.Przedmioty, sz => sz.z.PrzedmiotId,p=>p.Id,(sz,p)=>new{sz,p}).
             Select(v=>$"{v.sz.s.Imie}, {v.sz.s.Nazwisko}, {v.p.Nazwa}");
         return x;
@@ -232,6 +232,10 @@ public sealed class ZadaniaLinq
     /// </summary>
     public IEnumerable<string> Zadanie13_GrupowanieZapisowWedlugPrzedmiotu()
     {
+        var x = DaneUczelni.Zapisy.Join(
+                DaneUczelni.Przedmioty, z => z.PrzedmiotId, p => p.Id, (z, p) => new { z, p }).GroupBy(v => v.p.Nazwa)
+            .Select(v => $"{v.Key}, {v.Count()}");
+        return x;
         throw Niezaimplementowano(nameof(Zadanie13_GrupowanieZapisowWedlugPrzedmiotu));
     }
 
@@ -249,6 +253,11 @@ public sealed class ZadaniaLinq
     /// </summary>
     public IEnumerable<string> Zadanie14_SredniaOcenaNaPrzedmiot()
     {
+        var x = DaneUczelni.Zapisy.Join(
+            DaneUczelni.Przedmioty, z => z.PrzedmiotId, p => p.Id, (z, p) => new { z, p }).
+            Where(v=>v.z.OcenaKoncowa != null).GroupBy(v=>v.p.Nazwa).
+            Select(v =>  $"{v.Key}, {v.Average(v=>v.z.OcenaKoncowa)}");
+        return x;
         throw Niezaimplementowano(nameof(Zadanie14_SredniaOcenaNaPrzedmiot));
     }
 
@@ -265,6 +274,7 @@ public sealed class ZadaniaLinq
     /// </summary>
     public IEnumerable<string> Zadanie15_ProwadzacyILiczbaPrzedmiotow()
     {
+        var x = 
         throw Niezaimplementowano(nameof(Zadanie15_ProwadzacyILiczbaPrzedmiotow));
     }
 
