@@ -20,7 +20,6 @@ public sealed class ZadaniaLinq
             where s.Miasto.Equals("Warsaw") select $"{s.NumerIndeksu},{s.Imie},{s.Nazwisko},{s.Miasto}";
         return studentsWarsaw;
         
-        throw new NotImplementedException();
     }
 
     /// <summary>
@@ -36,7 +35,7 @@ public sealed class ZadaniaLinq
     {
         var students = from s in DaneUczelni.Studenci select $"{s.Email}";
         return students;
-        throw Niezaimplementowano(nameof(Zadanie02_AdresyEmailStudentow));
+   
     }
 
     /// <summary>
@@ -54,7 +53,7 @@ public sealed class ZadaniaLinq
         var studentsWarsaw = from s in DaneUczelni.Studenci orderby s.Nazwisko,s.Imie
             select $"{s.NumerIndeksu},{s.Imie},{s.Nazwisko}";
         return studentsWarsaw;
-        throw Niezaimplementowano(nameof(Zadanie03_StudenciPosortowani));
+
     }
 
     /// <summary>
@@ -74,7 +73,7 @@ public sealed class ZadaniaLinq
             select $"{s.Nazwa}, {s.DataStartu}").Take(1);
         return x;
             
-        throw Niezaimplementowano(nameof(Zadanie04_PierwszyPrzedmiotAnalityczny));
+
     }
 
     /// <summary>
@@ -93,7 +92,7 @@ public sealed class ZadaniaLinq
     {
         var x =  DaneUczelni.Zapisy.Any(s => s.CzyAktywny) ? "TAK" : "NIE";
         return [x];
-        throw Niezaimplementowano(nameof(Zadanie05_CzyIstniejeNieaktywneZapisanie));
+
     }
 
     /// <summary>
@@ -110,7 +109,7 @@ public sealed class ZadaniaLinq
     {
         var x = DaneUczelni.Prowadzacy.Any(s=> s.Katedra != null) ? "TAK" : "NIE";
         return [x];
-        throw Niezaimplementowano(nameof(Zadanie06_CzyWszyscyProwadzacyMajaKatedre));
+     
     }
 
     /// <summary>
@@ -126,7 +125,7 @@ public sealed class ZadaniaLinq
     {
         var x = DaneUczelni.Zapisy.Where(s => s.CzyAktywny == true).Count().ToString();
         return [x];
-        throw Niezaimplementowano(nameof(Zadanie07_LiczbaAktywnychZapisow));
+     
     }
 
     /// <summary>
@@ -142,7 +141,7 @@ public sealed class ZadaniaLinq
     {
         var x  = DaneUczelni.Studenci.OrderBy(s => s.Miasto).Select(s=>s.Miasto).Distinct();
         return x;
-        throw Niezaimplementowano(nameof(Zadanie08_UnikalneMiastaStudentow));
+       
     }
 
     /// <summary>
@@ -159,7 +158,7 @@ public sealed class ZadaniaLinq
     {
         var x = DaneUczelni.Zapisy.OrderByDescending(s=> s.DataZapisu).Select(s=>$"{s.DataZapisu}, {s.StudentId}, {s.PrzedmiotId}").Take(3);
         return x;
-        throw Niezaimplementowano(nameof(Zadanie09_TrzyNajnowszeZapisy));
+       
     }
 
     /// <summary>
@@ -177,7 +176,7 @@ public sealed class ZadaniaLinq
     {
         var x = DaneUczelni.Przedmioty.OrderBy(s => s.Nazwa).Select(s => $"{s.Nazwa},{s.Kategoria}").Skip(2).Take(2);
         return x;
-        throw Niezaimplementowano(nameof(Zadanie10_DrugaStronaPrzedmiotow));
+      
     }
 
     /// <summary>
@@ -196,7 +195,7 @@ public sealed class ZadaniaLinq
             DaneUczelni.Zapisy,s => s.Id, z=> z.StudentId, (s,z) => new { s, z }).Select(v => $"{v.s.Imie}, {v.s.Nazwisko}, {v.z.DataZapisu}");
         return x;
         
-        throw Niezaimplementowano(nameof(Zadanie11_PolaczStudentowIZapisy));
+    
     }
 
     /// <summary>
@@ -217,7 +216,7 @@ public sealed class ZadaniaLinq
             Join(DaneUczelni.Przedmioty, sz => sz.z.PrzedmiotId,p=>p.Id,(sz,p)=>new{sz,p}).
             Select(v=>$"{v.sz.s.Imie}, {v.sz.s.Nazwisko}, {v.p.Nazwa}");
         return x;
-        throw Niezaimplementowano(nameof(Zadanie12_ParyStudentPrzedmiot));
+   
     }
 
     /// <summary>
@@ -236,7 +235,6 @@ public sealed class ZadaniaLinq
                 DaneUczelni.Przedmioty, z => z.PrzedmiotId, p => p.Id, (z, p) => new { z, p }).GroupBy(v => v.p.Nazwa)
             .Select(v => $"{v.Key}, {v.Count()}");
         return x;
-        throw Niezaimplementowano(nameof(Zadanie13_GrupowanieZapisowWedlugPrzedmiotu));
     }
 
     /// <summary>
@@ -258,7 +256,6 @@ public sealed class ZadaniaLinq
             Where(v=>v.z.OcenaKoncowa != null).GroupBy(v=>v.p.Nazwa).
             Select(v =>  $"{v.Key}, {v.Average(v=>v.z.OcenaKoncowa)}");
         return x;
-        throw Niezaimplementowano(nameof(Zadanie14_SredniaOcenaNaPrzedmiot));
     }
 
     /// <summary>
@@ -274,8 +271,10 @@ public sealed class ZadaniaLinq
     /// </summary>
     public IEnumerable<string> Zadanie15_ProwadzacyILiczbaPrzedmiotow()
     {
-        var x = 
-        throw Niezaimplementowano(nameof(Zadanie15_ProwadzacyILiczbaPrzedmiotow));
+        var x = DaneUczelni.Prowadzacy.GroupJoin(
+                DaneUczelni.Przedmioty, pr => pr.Id, p => p.ProwadzacyId, (pr, p) => new { pr, p })
+            .Select(v => $"{v.pr.Imie},{v.pr.Nazwisko},{v.p.Count()}");
+        return x;
     }
 
     /// <summary>
@@ -292,7 +291,11 @@ public sealed class ZadaniaLinq
     /// </summary>
     public IEnumerable<string> Zadanie16_NajwyzszaOcenaKazdegoStudenta()
     {
-        throw Niezaimplementowano(nameof(Zadanie16_NajwyzszaOcenaKazdegoStudenta));
+        var x = DaneUczelni.Studenci.Join(
+                DaneUczelni.Zapisy, s => s.Id, z => z.StudentId, (s, z) => new { s, z })
+            .Where(sz => sz.z.OcenaKoncowa != null).GroupBy(sz => (sz.s.Imie, sz.s.Nazwisko))
+            .Select(v => $"{v.Key.Imie},{v.Key.Nazwisko},{v.Max(x => x.z.OcenaKoncowa)}");
+        return x;
     }
 
     /// <summary>
@@ -310,7 +313,11 @@ public sealed class ZadaniaLinq
     /// </summary>
     public IEnumerable<string> Wyzwanie01_StudenciZWiecejNizJednymAktywnymPrzedmiotem()
     {
-        throw Niezaimplementowano(nameof(Wyzwanie01_StudenciZWiecejNizJednymAktywnymPrzedmiotem));
+        var x = DaneUczelni.Studenci.Join(
+            DaneUczelni.Zapisy, s => s.Id, z => z.StudentId, (s, z) => new { s, z }).
+            Where(sz=>sz.z.CzyAktywny).GroupBy(sz=> (sz.s.Imie,sz.s.Nazwisko)).Where(sz=>sz.Count()>1).
+            Select(sz=>$"{sz.Key.Imie},{sz.Key.Nazwisko},{sz.Count()}");
+        return x;
     }
 
     /// <summary>
@@ -327,7 +334,10 @@ public sealed class ZadaniaLinq
     /// </summary>
     public IEnumerable<string> Wyzwanie02_PrzedmiotyStartujaceWKwietniuBezOcenKoncowych()
     {
-        throw Niezaimplementowano(nameof(Wyzwanie02_PrzedmiotyStartujaceWKwietniuBezOcenKoncowych));
+        var x = DaneUczelni.Przedmioty.Join(DaneUczelni.Zapisy,p=>p.Id,z=>z.PrzedmiotId, (p,z) => new { p,z }).
+            Where(pz=>pz.p.DataStartu.Month == 4 && pz.p.DataStartu.Year == 2026).
+            GroupBy(pz=>pz.p.Nazwa).Where(v=>v.All(pz=>pz.z.OcenaKoncowa == null)).Select(pz=>$"{pz.Key}");
+       return x;
     }
 
     /// <summary>
@@ -345,7 +355,15 @@ public sealed class ZadaniaLinq
     /// </summary>
     public IEnumerable<string> Wyzwanie03_ProwadzacyISredniaOcenNaIchPrzedmiotach()
     {
-        throw Niezaimplementowano(nameof(Wyzwanie03_ProwadzacyISredniaOcenNaIchPrzedmiotach));
+        var x = DaneUczelni.Prowadzacy
+            .GroupJoin(DaneUczelni.Przedmioty, pr => pr.Id, p => p.ProwadzacyId, (pr, p) => new { pr, p })
+            .SelectMany(q => q.p.DefaultIfEmpty(), (q, p) => new { q.pr, p })
+            .GroupJoin(DaneUczelni.Zapisy, prp => prp.p.Id, z => z.PrzedmiotId, (prp, z) => new { prp.pr, z })
+            .SelectMany(q => q.z.DefaultIfEmpty(), (q, z) => new { q.pr, z })
+            .Where(v => v.z != null && v.z.OcenaKoncowa != null)
+            .GroupBy(v => new { v.pr.Imie, v.pr.Nazwisko })
+            .Select(v => $"{v.Key.Imie},{v.Key.Nazwisko},{v.Average(g => g.z.OcenaKoncowa)}");
+        return x;
     }
 
     /// <summary>
@@ -363,7 +381,9 @@ public sealed class ZadaniaLinq
     /// </summary>
     public IEnumerable<string> Wyzwanie04_MiastaILiczbaAktywnychZapisow()
     {
-        throw Niezaimplementowano(nameof(Wyzwanie04_MiastaILiczbaAktywnychZapisow));
+        var x = DaneUczelni.Studenci.Join(DaneUczelni.Zapisy,  s => s.Id, z => z.StudentId, (s, z) => new { s, z }).
+            Where(z=>z.z.CzyAktywny).GroupBy(sz=>sz.s.Miasto).OrderBy(sz=>sz.Count()).Select(sz=>$"{sz.Key} ({sz.Count()})");
+        return x;   
     }
 
     private static NotImplementedException Niezaimplementowano(string nazwaMetody)
